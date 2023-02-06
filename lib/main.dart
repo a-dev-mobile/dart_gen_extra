@@ -6,6 +6,7 @@ import 'package:dart_gen_extra/logger.dart';
 import 'package:dart_gen_extra/constants.dart' as constants;
 
 const String fileOption = 'file';
+const String typeOption = 'type';
 const String helpFlag = 'help';
 const String verboseFlag = 'verbose';
 
@@ -14,16 +15,16 @@ Future<void> runFromArguments(List<String> arguments) async {
   parser
     ..addFlag(helpFlag, abbr: 'h', help: 'Usage help', negatable: false)
     // Make default null to differentiate when it is explicitly set
-    ..addOption(
-      fileOption,
-      abbr: 'f',
-      help: 'Path to dart file',
-    )
+    ..addOption(fileOption, abbr: 'f', help: 'Path to dart file')
+    ..addOption(typeOption,
+        abbr: 't',
+        defaultsTo: 'data',
+        help: 'What to generate additional features for? - "enum" or "data"')
+        
     ..addFlag(verboseFlag,
         abbr: 'v', help: 'Verbose output', defaultsTo: false);
 
   final ArgResults argResults = parser.parse(arguments);
-
 
   if (argResults[helpFlag]) {
     stdout.writeln('Generates additional features for the dart language');
@@ -34,15 +35,16 @@ Future<void> runFromArguments(List<String> arguments) async {
   // creating logger based on -v flag
   final logger = FLILogger(argResults[verboseFlag]);
 
-  if (argResults[fileOption]) {
+  if (argResults[fileOption] == null) {
     throw NoPathFoundException(
       'No path found in arguments'
-      ' use -f and add path ',
+      ' use -f and add path to dart file',
     );
   }
 
   try {
-    final filePath = argResults[fileOption]??'';
+    final filePath = argResults[fileOption].toString();
+    final type = argResults[typeOption].toString();
 
     final progress = logger.progress('Generate for \n$filePath');
 
