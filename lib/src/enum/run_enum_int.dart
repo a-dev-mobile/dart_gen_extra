@@ -37,7 +37,7 @@ enum LocaleEnum {
 Future<void> runEnumInt(
     {required String path, required FLILogger logger}) async {
   String contentFile = await UtilsString.readFile(path: path);
- 
+
   if (contentFile.contains('GENERATED CODE BELOW')) {
     logger.info('Файл $path \nуже имеет генерированные данные');
     return;
@@ -217,5 +217,9 @@ ${maybeMapOrNullEnd.toString()}
   String toString() => value.toString();
    }\n''');
 
+  print('***');
   print('✓ Successfully generated extra features for enum with int value');
+
+  print('***');
+
 }

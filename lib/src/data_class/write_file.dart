@@ -105,9 +105,9 @@ ${hashCode.toString()}]);
     replaceable: [],
   ));
 
-  print('');
+
   print('***');
-  print('SUCCESS');
+  print('✓ Successfully generated extra features for data class');
   print('***');
-  print('');
+
 }

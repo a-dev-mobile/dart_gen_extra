@@ -1,6 +1,5 @@
 import 'dart:io';
 
-
 import 'package:dart_gen_extra/logger.dart';
 import 'package:dart_gen_extra/utils.dart';
 
@@ -25,8 +24,6 @@ T? maybeMapOrNull<T>
 
 Future<void> runEnumDefault(
     {required String path, required FLILogger logger}) async {
-
-
   String contentFile = await UtilsString.readFile(path: path);
 
   if (contentFile.contains('GENERATED CODE BELOW')) {
@@ -164,7 +161,12 @@ ${maybeMapOrNullEnd.toString()}
   @override
   String toString() => value;
    }\n''');
-  print('✓ Successfully generated extra features for enum with default value');
+
+  print('***');
+  print(
+      '✓ Successfully generated extra features for enum with default value');
+  print('***');
+
 }
 
 String findText(

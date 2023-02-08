@@ -25,10 +25,10 @@ Future<void> runFromArguments(List<String> arguments) async {
         abbr: 't',
         defaultsTo: 'data',
         help: '''What to generate additional features for? - 
-1 - enum_default
-2 - enum_int
-3 - enum_string
-4 - data
+enum_default
+enum_int
+enum_string
+data
 ''')
     ..addFlag(verboseFlag,
         abbr: 'v', help: 'Verbose output', defaultsTo: false);

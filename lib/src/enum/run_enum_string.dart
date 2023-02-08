@@ -34,8 +34,8 @@ enum LocaleEnum {
 переносы должны быть указаны как >>>  LF
  */
 
-Future<void> runEnumString(   {required String path, required FLILogger logger}) async {
-
+Future<void> runEnumString(
+    {required String path, required FLILogger logger}) async {
   String contentFile = await UtilsString.readFile(path: path);
   if (contentFile.contains('GENERATED CODE BELOW')) {
     logger.info('Файл $path \nуже имеет генерированные данные');
@@ -216,5 +216,8 @@ ${maybeMapOrNullEnd.toString()}
   String toString() => value;
    }\n''');
 
-  print('✓ Successfully generated extra features for enum with String value');
+  print('***');
+  print('✓ Successfully generated extra features for enum with String value\n');
+  print('***');
+
 }

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:dart_gen_extra/enum_type_run.dart';
 
-class TypeVarable2 {  
+class TypeVarable2 {    
   /* 
   init: EnumTypeRun.data
   type: enum 
