@@ -24,7 +24,12 @@ Future<void> runFromArguments(List<String> arguments) async {
     ..addOption(typeOption,
         abbr: 't',
         defaultsTo: 'data',
-        help: 'What to generate additional features for? - "enum" or "data"')
+        help: '''What to generate additional features for? - 
+1 - enum_default
+2 - enum_int
+3 - enum_string
+4 - data
+''')
     ..addFlag(verboseFlag,
         abbr: 'v', help: 'Verbose output', defaultsTo: false);
 
@@ -48,7 +53,7 @@ Future<void> runFromArguments(List<String> arguments) async {
 
   try {
     final path = argResults[fileOption].toString();
-    logger.progress('Generate for \n$path');
+    logger.progress('Generate for \n$path\n');
 
     final typeString = argResults[typeOption].toString();
     final typeEnum =
@@ -69,7 +74,7 @@ Future<void> runFromArguments(List<String> arguments) async {
          runData(path: path,logger: logger);
         break;
       case EnumTypeRun.none:
-        logger.info('Тип генератора не определен');
+        logger.info('Generator type not defined');
     }
 
 
