@@ -2,8 +2,13 @@ import 'dart:io';
 
 import 'package:args/args.dart';
 import 'package:dart_gen_extra/custom_exceptions.dart';
+import 'package:dart_gen_extra/enum_type_run.dart';
 import 'package:dart_gen_extra/logger.dart';
-import 'package:dart_gen_extra/constants.dart' as constants;
+import 'package:dart_gen_extra/src/data_class/run_data_class.dart';
+
+import 'package:dart_gen_extra/src/enum/run_enum_default.dart';
+import 'package:dart_gen_extra/src/enum/run_enum_int.dart';
+import 'package:dart_gen_extra/src/enum/run_enum_string.dart';
 
 const String fileOption = 'file';
 const String typeOption = 'type';
@@ -20,7 +25,6 @@ Future<void> runFromArguments(List<String> arguments) async {
         abbr: 't',
         defaultsTo: 'data',
         help: 'What to generate additional features for? - "enum" or "data"')
-        
     ..addFlag(verboseFlag,
         abbr: 'v', help: 'Verbose output', defaultsTo: false);
 
@@ -43,12 +47,32 @@ Future<void> runFromArguments(List<String> arguments) async {
   }
 
   try {
-    final filePath = argResults[fileOption].toString();
-    final type = argResults[typeOption].toString();
+    final path = argResults[fileOption].toString();
+    logger.progress('Generate for \n$path');
 
-    final progress = logger.progress('Generate for \n$filePath');
+    final typeString = argResults[typeOption].toString();
+    final typeEnum =
+        EnumTypeRun.fromValue(typeString, fallback: EnumTypeRun.none);
 
-    print('\n✓ Successfully generated extra features');
+    switch (typeEnum) {
+      case EnumTypeRun.enumDefault:
+        runEnumDefault(path: path,logger: logger);
+        break;
+      case EnumTypeRun.enumInt:
+        runEnumInt(path: path,logger: logger);
+        break;
+      case EnumTypeRun.enumString:
+        runEnumString(path: path,logger: logger);
+        break;
+
+      case EnumTypeRun.data:
+         runData(path: path,logger: logger);
+        break;
+      case EnumTypeRun.none:
+        logger.info('Тип генератора не определен');
+    }
+
+
   } catch (e) {
     stderr.writeln('\n✕ Could not generated extra features');
     stderr.writeln(e);

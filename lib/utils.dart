@@ -4,9 +4,6 @@ import 'dart:io';
 
 import 'package:path/path.dart' as path;
 
-import 'custom_exceptions.dart';
-
-
 
 void printStatus(String message) {
   print('• $message');
@@ -18,39 +15,72 @@ String generateError(Exception e, String? error) {
 }
 
 
-/// Creates [File] in the given [filePath] if not exists
-File createFileIfNotExist(String filePath) {
-  final file = File(path.joinAll(path.split(filePath)));
-  if (!file.existsSync()) {
-    file.createSync(recursive: true);
+
+
+abstract class UtilsNumber {
+  static String removeTrailingZerosAndNumberfy(num v) {
+
+    return v.truncateToDouble() == v ? v.toInt().toString() : v.toString();
   }
-  return file;
 }
 
-/// Creates [Directory] in the given [dirPath] if not exists
-Directory createDirIfNotExist(String dirPath) {
-  final dir = Directory(path.joinAll(path.split(dirPath)));
-  if (!dir.existsSync()) {
-    dir.createSync(recursive: true);
-  }
-  return dir;
-}
+abstract class UtilsString {
+  static Future<String> readFile({required String path}) async {
+    final file = File(path);
 
-/// Returns a prettified json string
-String prettifyJsonEncode(Object? map) =>
-    JsonEncoder.withIndent(' ' * 4).convert(map);
+    try {
+      // Read the file
+      final contents = await file.readAsString();
 
-/// Check if give [File] or [Directory] exists at the give [paths],
-/// if not returns the failed [FileSystemEntity] path
-String? areFSEntiesExist(List<String> paths) {
-  for (final path in paths) {
-    final fsType = FileSystemEntity.typeSync(path);
-    if (![FileSystemEntityType.directory, FileSystemEntityType.file]
-        .contains(fsType)) {
-      return path;
+      return contents;
+    } catch (e) {
+      return 'ERROR $e';
     }
   }
-  return null;
+
+  static String replaceToEmpty(
+      {required String text, required List<String> replaceable}) {
+    String result = text;
+    for (var i in replaceable) {
+      result = result.replaceAll(i, '');
+    }
+    return result;
+  }
 }
 
+abstract class UtilsRegex {
+  static String getTextRegexLastMatch({
+    required String regex,
+    required String content,
+  }) {
+    final regexFindNameState = RegExp(regex, multiLine: true);
+    var match = regexFindNameState.allMatches(content);
+    if (match.isEmpty) {
+      print('');
+      print('---no matches found---');
+      print('');
+    }
 
+    return match.last[0] ?? '';
+  }
+
+  static List<String> getTextRegexListMatch({
+    required String regex,
+    required String content,
+  }) {
+    final regexFindNameState = RegExp(regex, multiLine: true);
+    var matches = regexFindNameState.allMatches(content);
+    if (matches.isEmpty) {
+      print('');
+      print('---no matches found---');
+      print('');
+    }
+    final list = <String>[];
+    for (final Match m in matches) {
+      String match = m[0]!;
+      list.add(match);
+    }
+
+    return list;
+  }
+}
