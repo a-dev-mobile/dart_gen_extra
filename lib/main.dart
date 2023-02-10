@@ -76,7 +76,7 @@ data
         runData(path: path, logger: logger);
         break;
       case TypeRun.assets:
-        runAssets(path: path, logger: logger);
+        runAssets(pathBase: path, logger: logger);
         break;
       case TypeRun.none:
         logger.error('Generator type not defined');

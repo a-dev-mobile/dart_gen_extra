@@ -1,5 +1,9 @@
 import 'dart:io';
-import 'package:basic_utils/basic_utils.dart';
+import 'package:dart_gen_extra/constants.dart';
+import 'package:dart_gen_extra/gen/assets.gen.dart';
+import 'package:yaml/yaml.dart';
+import 'package:dart_gen_extra/constants.dart' as constants;
+import 'package:dart_gen_extra/custom_exceptions.dart';
 import 'package:dart_gen_extra/src/assets_gen/model/asset_item.dart';
 import 'package:dart_gen_extra/src/assets_gen/enum_type_assets.dart';
 import 'package:path/path.dart' as p;
@@ -7,11 +11,11 @@ import 'package:path/path.dart' as p;
 import 'package:dart_gen_extra/logger.dart';
 
 Future<void> runAssets(
-    {required String path, required FLILogger logger}) async {
+    {required String pathBase, required FLILogger logger}) async {
   logger.progress('\nLooking for the assets folder');
 
-  final pathAssetsFolderExamp1 = p.join(path, 'assets');
-  final pathAssetsFolderExamp2 = p.join(path, 'asset');
+  final pathAssetsFolderExamp1 = p.join(pathBase, 'assets');
+  final pathAssetsFolderExamp2 = p.join(pathBase, 'asset');
 
   String pathAssets = '';
 
@@ -33,27 +37,30 @@ Future<void> runAssets(
       .whereType<File>()
       .toList();
 
-  String filePatch = '';
+  String fileFullPatch = '';
   String fileExtension = '';
   String fileName = '';
   EnumTypeAssets type = EnumTypeAssets.none;
   final assetsList = <AssetItem>[];
 
   for (var v in allFiles) {
-    filePatch = v.path;
-    fileExtension = p.extension(filePatch);
-    fileName = p.basename(filePatch).split('.').first;
+    fileFullPatch = v.path;
+    fileExtension = p.extension(fileFullPatch);
+    fileName = p.basename(fileFullPatch).split('.').first;
     type =
         EnumTypeAssets.fromValue(fileExtension, fallback: EnumTypeAssets.none);
 
     assetsList.add(AssetItem(
         fileName: fileName,
         fileExtension: fileExtension,
-        filePath: filePatch,
+        fileFullPath: fileFullPatch,
         type: type,
+        fileFromAssetsPath: fileFullPatch
+            .replaceAll(pathBase, '')
+            .replaceAll('\\', '/')
+            .replaceAll('/asset', 'asset'),
         fileFormatName: _formatFileName(fileName)));
   }
-
 
   logger.info('files found:');
   var lenght = 0;
@@ -67,11 +74,74 @@ Future<void> runAssets(
   if (fileNoneList.isNotEmpty) {
     logger.info('\nFile format is not supported:');
     for (var v in fileNoneList) {
-      print(v.filePath);
+      print(v.fileFullPath);
     }
   }
+
+  final pathGenFolder = getPathAssetsOutput(pathBase);
+  if (pathGenFolder.isEmpty) {
+    throw NoConfigFoundException(
+      'No configuration found in ${constants.pubspecFilePath}. ',
+    );
+  }
+
+  final pathGenFile = '${pathGenFolder}assets.gen.dart';
+  await _createFolderAndFile(pathGenFolder, pathGenFile);
+
+  StringBuffer sbFont = StringBuffer();
+
  
-  for (var v in assetsList) {}
+ 
+  
+ 
+ 
+  final fontList = assetsList.where((v) => v.type == EnumTypeAssets.ttf);
+
+  for (var v in fontList) {
+    sbFont.write('''
+/// File path: _${v.fileFromAssetsPath}
+static const String ${v.fileFormatName} = '${v.fileFromAssetsPath}';
+
+''');
+  }
+
+  StringBuffer sbImage = StringBuffer();
+  final imageList = assetsList.where((v) => v.type == EnumTypeAssets.png);
+  for (var v in imageList) {
+    sbImage.write('''
+/// File path: _${v.fileFromAssetsPath}
+static const String ${v.fileFormatName} = '${v.fileFromAssetsPath}';
+
+''');
+
+    Assets.ttf;
+  }
+
+  File(pathGenFile).writeAsString('''
+$GEN_MSG
+class AssetsFont {
+  static final AssetsFont _internalSingleton = AssetsFont._internal();
+  factory AssetsFont() => _internalSingleton;
+  AssetsFont._internal();
+
+${sbFont.toString()}
+}
+
+
+class AssetsImage {
+  static final AssetsImage _internalSingleton = AssetsImage._internal();
+  factory AssetsImage() => _internalSingleton;
+  AssetsImage._internal();
+
+${sbImage.toString()}
+}
+
+
+
+
+''');
+
+  // for (var v in assetsList) {}
 
   // logger.info('pdf:\t${pdfFiles.length}');
   // logger.info('svg:\t${svgFiles.length}');
@@ -83,6 +153,13 @@ Future<void> runAssets(
   // print('');
   // print('');
   // print(svgFiles);
+}
+
+Future<void> _createFolderAndFile(
+    String pathGenFolder, String pathGenFile) async {
+  await Directory(pathGenFolder).create(recursive: true);
+  File file = File(pathGenFile);
+  await file.create();
 }
 
 Future<bool> _isExistFolder(String path) async {
@@ -98,4 +175,48 @@ String _formatFileName(String s) {
   }
 
   return '${newString[0].toLowerCase()}${newString.substring(1)}';
+}
+
+/// Loads dart gen_extra_config from `pubspec.yaml` file
+String getPathAssetsOutput(String basePath) {
+  final pubspecFile = File(p.join(basePath, constants.pubspecFilePath));
+  if (!pubspecFile.existsSync()) {
+    return '';
+  }
+  final content = pubspecFile.readAsStringSync();
+  final userMap = loadYaml(content);
+
+  if (userMap == null) return '';
+
+  try {
+    var relPath = (userMap['dart_gen_extra']['assets_output']).toString();
+
+    return p.join(basePath, relPath);
+  } on Exception {
+    return '';
+  }
+}
+
+extension YamlMapConverter on YamlMap {
+  dynamic _convertNode(dynamic v) {
+    if (v is YamlMap) {
+      return (v).toMap();
+    } else if (v is YamlList) {
+      var list = <dynamic>[];
+      for (var e in v) {
+        list.add(_convertNode(e));
+      }
+      return list;
+    } else {
+      return v;
+    }
+  }
+
+  Map<String, dynamic> toMap() {
+    var map = <String, dynamic>{};
+    nodes.forEach((k, v) {
+      map[(k as YamlScalar).value.toString()] = _convertNode(v.value);
+    });
+    return map;
+  }
 }
