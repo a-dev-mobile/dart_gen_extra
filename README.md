@@ -41,16 +41,18 @@ You can then add a launch config to your `launch.json` to generate:
       "command": "dart",
       "args": ["run", "dart_gen_extra", "-t", "enum_string", "-f", "${file}"],
     },
-        // GEN data    
+        // GEN data class   
     {
-      "label": "GEN data",
-      "type": "dart",
+      "label": "GEN data class",
+      "type": "dart run dart_gen_extra <param>",
       "command": "dart",
       "args": ["run", "dart_gen_extra", "-t", "data", "-f", "${file}"],
-    }
+    },
 ```
 
 ### How to use
+
+![enum_type](https://github.com/a-dev-mobile/dart_gen_extra/blob/master/resources/enum_type.png)
 
 in the works...
 
