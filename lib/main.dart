@@ -4,6 +4,7 @@ import 'package:args/args.dart';
 import 'package:dart_gen_extra/custom_exceptions.dart';
 import 'package:dart_gen_extra/enum_type_run.dart';
 import 'package:dart_gen_extra/logger.dart';
+import 'package:dart_gen_extra/src/assets_gen/run_assets_svg.dart';
 import 'package:dart_gen_extra/src/data_class/run_data_class.dart';
 
 import 'package:dart_gen_extra/src/enum/run_enum_default.dart';
@@ -61,23 +62,25 @@ data
 
     switch (typeEnum) {
       case EnumTypeRun.enumDefault:
-        runEnumDefault(path: path,logger: logger);
+        runEnumDefault(path: path, logger: logger);
         break;
       case EnumTypeRun.enumInt:
-        runEnumInt(path: path,logger: logger);
+        runEnumInt(path: path, logger: logger);
         break;
       case EnumTypeRun.enumString:
-        runEnumString(path: path,logger: logger);
+        runEnumString(path: path, logger: logger);
         break;
 
       case EnumTypeRun.data:
-         runData(path: path,logger: logger);
+        runData(path: path, logger: logger);
         break;
       case EnumTypeRun.none:
         logger.info('Generator type not defined');
+        break;
+      case EnumTypeRun.assetsSvg:
+        runAssetsSvg(path: path, logger: logger);
+        break;
     }
-
-
   } catch (e) {
     stderr.writeln('\n✕ Could not generated extra features');
     stderr.writeln(e);

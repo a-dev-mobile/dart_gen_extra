@@ -47,9 +47,7 @@ void writeToFile(
   final newContent = '''
 ${header}class $className { $classBrackets
    
-  //  ******************************
-  // GENERATED CODE BELOW - DO NOT MODIFY
-  //  ******************************
+$GEN_MSG
 
   
   const $className({
@@ -105,9 +103,7 @@ ${hashCode.toString()}]);
     replaceable: [],
   ));
 
-
   print('***');
   print('✓ Successfully generated extra features for data class');
   print('***');
-
 }

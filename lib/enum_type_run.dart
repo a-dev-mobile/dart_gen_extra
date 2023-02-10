@@ -1,13 +1,15 @@
   // ignore_for_file: constant_identifier_names, non_constant_identifier_names, lines_longer_than_80_chars
   /*
+  
   enum EnumTypeRun {
   enumDefault('enum_default'),
   enumInt('enum_int'),
   enumString('enum_string'),
   data('data'),
+  assetsSvg('assets_svg'),
   none('none'),
 }
-
+ 
   */
   
   //  ******************************
@@ -19,6 +21,7 @@ enum EnumTypeRun with Comparable<EnumTypeRun> {
   enumInt('enum_int'),
   enumString('enum_string'),
   data('data'),
+  assetsSvg('assets_svg'),
   none('none');
 
   const EnumTypeRun(this.value);
@@ -38,6 +41,8 @@ enum EnumTypeRun with Comparable<EnumTypeRun> {
         return enumString;
       case 'data':
         return data;
+      case 'assets_svg':
+        return assetsSvg;
       case 'none':
         return none;
 
@@ -52,6 +57,7 @@ enum EnumTypeRun with Comparable<EnumTypeRun> {
     required T Function() enumInt,
     required T Function() enumString,
     required T Function() data,
+    required T Function() assetsSvg,
     required T Function() none,
 
   }) {
@@ -64,6 +70,8 @@ enum EnumTypeRun with Comparable<EnumTypeRun> {
         return enumString();     
       case EnumTypeRun.data:
         return data();     
+      case EnumTypeRun.assetsSvg:
+        return assetsSvg();     
       case EnumTypeRun.none:
         return none();     
 
@@ -77,6 +85,7 @@ enum EnumTypeRun with Comparable<EnumTypeRun> {
     T Function()? enumInt,
     T Function()? enumString,
     T Function()? data,
+    T Function()? assetsSvg,
     T Function()? none,
 
   }) =>
@@ -85,6 +94,7 @@ enum EnumTypeRun with Comparable<EnumTypeRun> {
       enumInt: enumInt ?? orElse,     
       enumString: enumString ?? orElse,     
       data: data ?? orElse,     
+      assetsSvg: assetsSvg ?? orElse,     
       none: none ?? orElse,     
 
       );
@@ -95,6 +105,7 @@ enum EnumTypeRun with Comparable<EnumTypeRun> {
     T Function()? enumInt,
     T Function()? enumString,
     T Function()? data,
+    T Function()? assetsSvg,
     T Function()? none,
 
   }) =>
@@ -104,6 +115,7 @@ enum EnumTypeRun with Comparable<EnumTypeRun> {
         enumInt: enumInt,  
         enumString: enumString,  
         data: data,  
+        assetsSvg: assetsSvg,  
         none: none,  
         
       );

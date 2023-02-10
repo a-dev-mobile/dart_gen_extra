@@ -1,5 +1,4 @@
-import 'package:path/path.dart' as path;
-
+// ignore_for_file: constant_identifier_names
 
 String introMessage(String currentVersion) => '''
 
@@ -8,5 +7,9 @@ String introMessage(String currentVersion) => '''
   ════════════════════════════════════════════
   ''';
 
-
-
+const String GEN_MSG = '''
+//          --DartGenExtra--
+//  *************************************
+// GENERATED CODE BELOW - DO NOT MODIFY
+//  *************************************
+  ''';

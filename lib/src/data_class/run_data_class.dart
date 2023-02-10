@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
 
+import 'package:dart_gen_extra/constants.dart';
 import 'package:dart_gen_extra/logger.dart';
 import 'package:dart_gen_extra/src/data_class/type_variable_enum.dart';
 import 'package:dart_gen_extra/utils.dart';

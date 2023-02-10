@@ -1,5 +1,5 @@
-  // ignore_for_file: constant_identifier_names, non_constant_identifier_names, lines_longer_than_80_chars
-  /*
+// ignore_for_file: constant_identifier_names, non_constant_identifier_names, lines_longer_than_80_chars
+/*
   
   enum TypeVarable {
   enum_('enum'),
@@ -67,12 +67,10 @@
   final String value;
 }
   */
-  
-  //  ******************************
-  // GENERATED CODE BELOW - DO NOT MODIFY
-  //  ******************************
 
-enum TypeVarable with Comparable<TypeVarable> { 
+
+
+enum TypeVarable with Comparable<TypeVarable> {
   enum_('enum'),
   string_('String'),
   bool_('bool'),
@@ -295,115 +293,113 @@ enum TypeVarable with Comparable<TypeVarable> {
     required T Function() data,
     required T Function() list_data,
     required T Function() none_,
-
   }) {
     switch (this) {
       case TypeVarable.enum_:
-        return enum_();     
+        return enum_();
       case TypeVarable.string_:
-        return string_();     
+        return string_();
       case TypeVarable.bool_:
-        return bool_();     
+        return bool_();
       case TypeVarable.int_:
-        return int_();     
+        return int_();
       case TypeVarable.double_:
-        return double_();     
+        return double_();
       case TypeVarable.num_:
-        return num_();     
+        return num_();
       case TypeVarable.list_:
-        return list_();     
+        return list_();
       case TypeVarable.list_bool_:
-        return list_bool_();     
+        return list_bool_();
       case TypeVarable.list_other:
-        return list_other();     
+        return list_other();
       case TypeVarable.list_int_:
-        return list_int_();     
+        return list_int_();
       case TypeVarable.list_string_:
-        return list_string_();     
+        return list_string_();
       case TypeVarable.list_double_:
-        return list_double_();     
+        return list_double_();
       case TypeVarable.list_bool_null:
-        return list_bool_null();     
+        return list_bool_null();
       case TypeVarable.list_int_null:
-        return list_int_null();     
+        return list_int_null();
       case TypeVarable.list_string_null:
-        return list_string_null();     
+        return list_string_null();
       case TypeVarable.list_double_null:
-        return list_double_null();     
+        return list_double_null();
       case TypeVarable.list_dynamic_:
-        return list_dynamic_();     
+        return list_dynamic_();
       case TypeVarable.list_map_int_string_:
-        return list_map_int_string_();     
+        return list_map_int_string_();
       case TypeVarable.list_map_int_string_null:
-        return list_map_int_string_null();     
+        return list_map_int_string_null();
       case TypeVarable.list_map_int_dynamic_:
-        return list_map_int_dynamic_();     
+        return list_map_int_dynamic_();
       case TypeVarable.set_:
-        return set_();     
+        return set_();
       case TypeVarable.set_string:
-        return set_string();     
+        return set_string();
       case TypeVarable.set_string_null:
-        return set_string_null();     
+        return set_string_null();
       case TypeVarable.set_int:
-        return set_int();     
+        return set_int();
       case TypeVarable.set_int_null:
-        return set_int_null();     
+        return set_int_null();
       case TypeVarable.set_bool:
-        return set_bool();     
+        return set_bool();
       case TypeVarable.set_bool_null:
-        return set_bool_null();     
+        return set_bool_null();
       case TypeVarable.set_double:
-        return set_double();     
+        return set_double();
       case TypeVarable.set_double_null:
-        return set_double_null();     
+        return set_double_null();
       case TypeVarable.map_:
-        return map_();     
+        return map_();
       case TypeVarable.map_string_dynamic_:
-        return map_string_dynamic_();     
+        return map_string_dynamic_();
       case TypeVarable.map_string_bool:
-        return map_string_bool();     
+        return map_string_bool();
       case TypeVarable.map_string_int:
-        return map_string_int();     
+        return map_string_int();
       case TypeVarable.map_string_string:
-        return map_string_string();     
+        return map_string_string();
       case TypeVarable.map_string_double_:
-        return map_string_double_();     
+        return map_string_double_();
       case TypeVarable.map_string_bool_null:
-        return map_string_bool_null();     
+        return map_string_bool_null();
       case TypeVarable.map_string_int_null:
-        return map_string_int_null();     
+        return map_string_int_null();
       case TypeVarable.map_string_string_null:
-        return map_string_string_null();     
+        return map_string_string_null();
       case TypeVarable.map_string_double_null:
-        return map_string_double_null();     
+        return map_string_double_null();
       case TypeVarable.map_int_string:
-        return map_int_string();     
+        return map_int_string();
       case TypeVarable.map_int_string_null:
-        return map_int_string_null();     
+        return map_int_string_null();
       case TypeVarable.map_int_double:
-        return map_int_double();     
+        return map_int_double();
       case TypeVarable.map_int_double_null:
-        return map_int_double_null();     
+        return map_int_double_null();
       case TypeVarable.map_int_bool:
-        return map_int_bool();     
+        return map_int_bool();
       case TypeVarable.map_int_bool_null:
-        return map_int_bool_null();     
+        return map_int_bool_null();
       case TypeVarable.map_int_dynamic_:
-        return map_int_dynamic_();     
+        return map_int_dynamic_();
       case TypeVarable.date_time:
-        return date_time();     
+        return date_time();
       case TypeVarable.map_dynamic_dynamic_:
-        return map_dynamic_dynamic_();     
+        return map_dynamic_dynamic_();
       case TypeVarable.data:
-        return data();     
+        return data();
       case TypeVarable.list_data:
-        return list_data();     
+        return list_data();
       case TypeVarable.none_:
-        return none_();     
-
+        return none_();
     }
   }
-  
+
   /// Pattern matching
   T maybeMap<T>({
     required T Function() orElse,
@@ -458,61 +454,59 @@ enum TypeVarable with Comparable<TypeVarable> {
     T Function()? data,
     T Function()? list_data,
     T Function()? none_,
-
   }) =>
       map<T>(
-      enum_: enum_ ?? orElse,     
-      string_: string_ ?? orElse,     
-      bool_: bool_ ?? orElse,     
-      int_: int_ ?? orElse,     
-      double_: double_ ?? orElse,     
-      num_: num_ ?? orElse,     
-      list_: list_ ?? orElse,     
-      list_bool_: list_bool_ ?? orElse,     
-      list_other: list_other ?? orElse,     
-      list_int_: list_int_ ?? orElse,     
-      list_string_: list_string_ ?? orElse,     
-      list_double_: list_double_ ?? orElse,     
-      list_bool_null: list_bool_null ?? orElse,     
-      list_int_null: list_int_null ?? orElse,     
-      list_string_null: list_string_null ?? orElse,     
-      list_double_null: list_double_null ?? orElse,     
-      list_dynamic_: list_dynamic_ ?? orElse,     
-      list_map_int_string_: list_map_int_string_ ?? orElse,     
-      list_map_int_string_null: list_map_int_string_null ?? orElse,     
-      list_map_int_dynamic_: list_map_int_dynamic_ ?? orElse,     
-      set_: set_ ?? orElse,     
-      set_string: set_string ?? orElse,     
-      set_string_null: set_string_null ?? orElse,     
-      set_int: set_int ?? orElse,     
-      set_int_null: set_int_null ?? orElse,     
-      set_bool: set_bool ?? orElse,     
-      set_bool_null: set_bool_null ?? orElse,     
-      set_double: set_double ?? orElse,     
-      set_double_null: set_double_null ?? orElse,     
-      map_: map_ ?? orElse,     
-      map_string_dynamic_: map_string_dynamic_ ?? orElse,     
-      map_string_bool: map_string_bool ?? orElse,     
-      map_string_int: map_string_int ?? orElse,     
-      map_string_string: map_string_string ?? orElse,     
-      map_string_double_: map_string_double_ ?? orElse,     
-      map_string_bool_null: map_string_bool_null ?? orElse,     
-      map_string_int_null: map_string_int_null ?? orElse,     
-      map_string_string_null: map_string_string_null ?? orElse,     
-      map_string_double_null: map_string_double_null ?? orElse,     
-      map_int_string: map_int_string ?? orElse,     
-      map_int_string_null: map_int_string_null ?? orElse,     
-      map_int_double: map_int_double ?? orElse,     
-      map_int_double_null: map_int_double_null ?? orElse,     
-      map_int_bool: map_int_bool ?? orElse,     
-      map_int_bool_null: map_int_bool_null ?? orElse,     
-      map_int_dynamic_: map_int_dynamic_ ?? orElse,     
-      date_time: date_time ?? orElse,     
-      map_dynamic_dynamic_: map_dynamic_dynamic_ ?? orElse,     
-      data: data ?? orElse,     
-      list_data: list_data ?? orElse,     
-      none_: none_ ?? orElse,     
-
+        enum_: enum_ ?? orElse,
+        string_: string_ ?? orElse,
+        bool_: bool_ ?? orElse,
+        int_: int_ ?? orElse,
+        double_: double_ ?? orElse,
+        num_: num_ ?? orElse,
+        list_: list_ ?? orElse,
+        list_bool_: list_bool_ ?? orElse,
+        list_other: list_other ?? orElse,
+        list_int_: list_int_ ?? orElse,
+        list_string_: list_string_ ?? orElse,
+        list_double_: list_double_ ?? orElse,
+        list_bool_null: list_bool_null ?? orElse,
+        list_int_null: list_int_null ?? orElse,
+        list_string_null: list_string_null ?? orElse,
+        list_double_null: list_double_null ?? orElse,
+        list_dynamic_: list_dynamic_ ?? orElse,
+        list_map_int_string_: list_map_int_string_ ?? orElse,
+        list_map_int_string_null: list_map_int_string_null ?? orElse,
+        list_map_int_dynamic_: list_map_int_dynamic_ ?? orElse,
+        set_: set_ ?? orElse,
+        set_string: set_string ?? orElse,
+        set_string_null: set_string_null ?? orElse,
+        set_int: set_int ?? orElse,
+        set_int_null: set_int_null ?? orElse,
+        set_bool: set_bool ?? orElse,
+        set_bool_null: set_bool_null ?? orElse,
+        set_double: set_double ?? orElse,
+        set_double_null: set_double_null ?? orElse,
+        map_: map_ ?? orElse,
+        map_string_dynamic_: map_string_dynamic_ ?? orElse,
+        map_string_bool: map_string_bool ?? orElse,
+        map_string_int: map_string_int ?? orElse,
+        map_string_string: map_string_string ?? orElse,
+        map_string_double_: map_string_double_ ?? orElse,
+        map_string_bool_null: map_string_bool_null ?? orElse,
+        map_string_int_null: map_string_int_null ?? orElse,
+        map_string_string_null: map_string_string_null ?? orElse,
+        map_string_double_null: map_string_double_null ?? orElse,
+        map_int_string: map_int_string ?? orElse,
+        map_int_string_null: map_int_string_null ?? orElse,
+        map_int_double: map_int_double ?? orElse,
+        map_int_double_null: map_int_double_null ?? orElse,
+        map_int_bool: map_int_bool ?? orElse,
+        map_int_bool_null: map_int_bool_null ?? orElse,
+        map_int_dynamic_: map_int_dynamic_ ?? orElse,
+        date_time: date_time ?? orElse,
+        map_dynamic_dynamic_: map_dynamic_dynamic_ ?? orElse,
+        data: data ?? orElse,
+        list_data: list_data ?? orElse,
+        none_: none_ ?? orElse,
       );
 
   /// Pattern matching
@@ -568,62 +562,60 @@ enum TypeVarable with Comparable<TypeVarable> {
     T Function()? data,
     T Function()? list_data,
     T Function()? none_,
-
   }) =>
       maybeMap<T?>(
         orElse: () => null,
-        enum_: enum_,  
-        string_: string_,  
-        bool_: bool_,  
-        int_: int_,  
-        double_: double_,  
-        num_: num_,  
-        list_: list_,  
-        list_bool_: list_bool_,  
-        list_other: list_other,  
-        list_int_: list_int_,  
-        list_string_: list_string_,  
-        list_double_: list_double_,  
-        list_bool_null: list_bool_null,  
-        list_int_null: list_int_null,  
-        list_string_null: list_string_null,  
-        list_double_null: list_double_null,  
-        list_dynamic_: list_dynamic_,  
-        list_map_int_string_: list_map_int_string_,  
-        list_map_int_string_null: list_map_int_string_null,  
-        list_map_int_dynamic_: list_map_int_dynamic_,  
-        set_: set_,  
-        set_string: set_string,  
-        set_string_null: set_string_null,  
-        set_int: set_int,  
-        set_int_null: set_int_null,  
-        set_bool: set_bool,  
-        set_bool_null: set_bool_null,  
-        set_double: set_double,  
-        set_double_null: set_double_null,  
-        map_: map_,  
-        map_string_dynamic_: map_string_dynamic_,  
-        map_string_bool: map_string_bool,  
-        map_string_int: map_string_int,  
-        map_string_string: map_string_string,  
-        map_string_double_: map_string_double_,  
-        map_string_bool_null: map_string_bool_null,  
-        map_string_int_null: map_string_int_null,  
-        map_string_string_null: map_string_string_null,  
-        map_string_double_null: map_string_double_null,  
-        map_int_string: map_int_string,  
-        map_int_string_null: map_int_string_null,  
-        map_int_double: map_int_double,  
-        map_int_double_null: map_int_double_null,  
-        map_int_bool: map_int_bool,  
-        map_int_bool_null: map_int_bool_null,  
-        map_int_dynamic_: map_int_dynamic_,  
-        date_time: date_time,  
-        map_dynamic_dynamic_: map_dynamic_dynamic_,  
-        data: data,  
-        list_data: list_data,  
-        none_: none_,  
-        
+        enum_: enum_,
+        string_: string_,
+        bool_: bool_,
+        int_: int_,
+        double_: double_,
+        num_: num_,
+        list_: list_,
+        list_bool_: list_bool_,
+        list_other: list_other,
+        list_int_: list_int_,
+        list_string_: list_string_,
+        list_double_: list_double_,
+        list_bool_null: list_bool_null,
+        list_int_null: list_int_null,
+        list_string_null: list_string_null,
+        list_double_null: list_double_null,
+        list_dynamic_: list_dynamic_,
+        list_map_int_string_: list_map_int_string_,
+        list_map_int_string_null: list_map_int_string_null,
+        list_map_int_dynamic_: list_map_int_dynamic_,
+        set_: set_,
+        set_string: set_string,
+        set_string_null: set_string_null,
+        set_int: set_int,
+        set_int_null: set_int_null,
+        set_bool: set_bool,
+        set_bool_null: set_bool_null,
+        set_double: set_double,
+        set_double_null: set_double_null,
+        map_: map_,
+        map_string_dynamic_: map_string_dynamic_,
+        map_string_bool: map_string_bool,
+        map_string_int: map_string_int,
+        map_string_string: map_string_string,
+        map_string_double_: map_string_double_,
+        map_string_bool_null: map_string_bool_null,
+        map_string_int_null: map_string_int_null,
+        map_string_string_null: map_string_string_null,
+        map_string_double_null: map_string_double_null,
+        map_int_string: map_int_string,
+        map_int_string_null: map_int_string_null,
+        map_int_double: map_int_double,
+        map_int_double_null: map_int_double_null,
+        map_int_bool: map_int_bool,
+        map_int_bool_null: map_int_bool_null,
+        map_int_dynamic_: map_int_dynamic_,
+        date_time: date_time,
+        map_dynamic_dynamic_: map_dynamic_dynamic_,
+        data: data,
+        list_data: list_data,
+        none_: none_,
       );
 
   @override
@@ -631,4 +623,4 @@ enum TypeVarable with Comparable<TypeVarable> {
 
   @override
   String toString() => value;
-   }
+}

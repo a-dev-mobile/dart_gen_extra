@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dart_gen_extra/constants.dart';
 import 'package:dart_gen_extra/logger.dart';
 import 'package:dart_gen_extra/utils.dart';
 
@@ -26,7 +27,7 @@ Future<void> runEnumDefault(
     {required String path, required FLILogger logger}) async {
   String contentFile = await UtilsString.readFile(path: path);
 
-  if (contentFile.contains('GENERATED CODE BELOW')) {
+  if (contentFile.contains('GENERATED CODE')) {
     logger.info('Файл $path \nуже имеет генерированные данные');
     return;
   }
@@ -107,9 +108,7 @@ Future<void> runEnumDefault(
   $contentFile
   */
   
-  //  ******************************
-  // GENERATED CODE BELOW - DO NOT MODIFY
-  //  ******************************
+$GEN_MSG
 
 enum $nameEnum with Comparable<$nameEnum> { 
 ${constructor.toString()}
@@ -163,10 +162,8 @@ ${maybeMapOrNullEnd.toString()}
    }\n''');
 
   print('***');
-  print(
-      '✓ Successfully generated extra features for enum with default value');
+  print('✓ Successfully generated extra features for enum with default value');
   print('***');
-
 }
 
 String findText(
