@@ -50,7 +50,8 @@ You can then add a launch config to your `launch.json` to generate:
 ```
 
 ## How to use
-###  Enum
+
+### Enum
 
 ![enum_type](https://github.com/a-dev-mobile/dart_gen_extra/blob/master/resources/enum_type.png)
 
@@ -59,8 +60,6 @@ dart run dart_gen_extra -t <type_enum> -f <your file>
 ```
 
 ![enum_example](https://github.com/a-dev-mobile/dart_gen_extra/blob/master/resources/enum_example.png)
-
-
 
 ### Data class
 
@@ -71,11 +70,13 @@ in the works...
 in the works...
 
 ## Help
+
 If you encounter any issues [please report them here](https://github.com/a-dev-mobile/dart_gen_extra/issues).
+
 ### License
 
 ```
-Copyright 2022 Dart Gen Extra
+Copyright 2023 Dart Gen Extra
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

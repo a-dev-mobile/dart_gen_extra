@@ -4,8 +4,7 @@ String introMessage(String currentVersion) => '''
 
   ════════════════════════════════════════════
      DART GEN EXTRA (v$currentVersion)                               
-  ════════════════════════════════════════════
-  ''';
+  ════════════════════════════════════════════''';
 
 const String GEN_MSG = '''
 //          --DartGenExtra--

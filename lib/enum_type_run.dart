@@ -1,36 +1,35 @@
   // ignore_for_file: constant_identifier_names, non_constant_identifier_names, lines_longer_than_80_chars
   /*
-  
-  enum EnumTypeRun {
+  enum TypeRun {
   enumDefault('enum_default'),
   enumInt('enum_int'),
   enumString('enum_string'),
   data('data'),
-  assetsSvg('assets_svg'),
+  assets('assets'),
   none('none'),
 }
- 
+
   */
   
   //  ******************************
   // GENERATED CODE BELOW - DO NOT MODIFY
   //  ******************************
 
-enum EnumTypeRun with Comparable<EnumTypeRun> { 
+enum TypeRun with Comparable<TypeRun> { 
   enumDefault('enum_default'),
   enumInt('enum_int'),
   enumString('enum_string'),
   data('data'),
-  assetsSvg('assets_svg'),
+  assets('assets'),
   none('none');
 
-  const EnumTypeRun(this.value);
+  const TypeRun(this.value);
 
   final String value;
 
-  static EnumTypeRun fromValue(
+  static TypeRun fromValue(
     String? value, {
-    EnumTypeRun? fallback,
+    TypeRun? fallback,
   }) {
     switch (value) {
       case 'enum_default':
@@ -41,8 +40,8 @@ enum EnumTypeRun with Comparable<EnumTypeRun> {
         return enumString;
       case 'data':
         return data;
-      case 'assets_svg':
-        return assetsSvg;
+      case 'assets':
+        return assets;
       case 'none':
         return none;
 
@@ -57,22 +56,22 @@ enum EnumTypeRun with Comparable<EnumTypeRun> {
     required T Function() enumInt,
     required T Function() enumString,
     required T Function() data,
-    required T Function() assetsSvg,
+    required T Function() assets,
     required T Function() none,
 
   }) {
     switch (this) {
-      case EnumTypeRun.enumDefault:
+      case TypeRun.enumDefault:
         return enumDefault();     
-      case EnumTypeRun.enumInt:
+      case TypeRun.enumInt:
         return enumInt();     
-      case EnumTypeRun.enumString:
+      case TypeRun.enumString:
         return enumString();     
-      case EnumTypeRun.data:
+      case TypeRun.data:
         return data();     
-      case EnumTypeRun.assetsSvg:
-        return assetsSvg();     
-      case EnumTypeRun.none:
+      case TypeRun.assets:
+        return assets();     
+      case TypeRun.none:
         return none();     
 
     }
@@ -85,7 +84,7 @@ enum EnumTypeRun with Comparable<EnumTypeRun> {
     T Function()? enumInt,
     T Function()? enumString,
     T Function()? data,
-    T Function()? assetsSvg,
+    T Function()? assets,
     T Function()? none,
 
   }) =>
@@ -94,7 +93,7 @@ enum EnumTypeRun with Comparable<EnumTypeRun> {
       enumInt: enumInt ?? orElse,     
       enumString: enumString ?? orElse,     
       data: data ?? orElse,     
-      assetsSvg: assetsSvg ?? orElse,     
+      assets: assets ?? orElse,     
       none: none ?? orElse,     
 
       );
@@ -105,7 +104,7 @@ enum EnumTypeRun with Comparable<EnumTypeRun> {
     T Function()? enumInt,
     T Function()? enumString,
     T Function()? data,
-    T Function()? assetsSvg,
+    T Function()? assets,
     T Function()? none,
 
   }) =>
@@ -115,13 +114,13 @@ enum EnumTypeRun with Comparable<EnumTypeRun> {
         enumInt: enumInt,  
         enumString: enumString,  
         data: data,  
-        assetsSvg: assetsSvg,  
+        assets: assets,  
         none: none,  
         
       );
 
   @override
-  int compareTo(EnumTypeRun other) => index.compareTo(other.index);
+  int compareTo(TypeRun other) => index.compareTo(other.index);
 
   @override
   String toString() => value;

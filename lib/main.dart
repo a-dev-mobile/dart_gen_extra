@@ -4,7 +4,7 @@ import 'package:args/args.dart';
 import 'package:dart_gen_extra/custom_exceptions.dart';
 import 'package:dart_gen_extra/enum_type_run.dart';
 import 'package:dart_gen_extra/logger.dart';
-import 'package:dart_gen_extra/src/assets_gen/run_assets_svg.dart';
+import 'package:dart_gen_extra/src/assets_gen/run_assets.dart';
 import 'package:dart_gen_extra/src/data_class/run_data_class.dart';
 
 import 'package:dart_gen_extra/src/enum/run_enum_default.dart';
@@ -44,6 +44,7 @@ data
   }
   // creating logger based on -v flag
   final logger = FLILogger(argResults[verboseFlag]);
+  logger.progress('Start generate');
 
   if (argResults[fileOption] == null) {
     throw NoPathFoundException(
@@ -54,32 +55,32 @@ data
 
   try {
     final path = argResults[fileOption].toString();
-    logger.progress('Generate for \n$path\n');
+
+    logger.info('Path used: $path');
 
     final typeString = argResults[typeOption].toString();
-    final typeEnum =
-        EnumTypeRun.fromValue(typeString, fallback: EnumTypeRun.none);
-
-    switch (typeEnum) {
-      case EnumTypeRun.enumDefault:
+    final typeRun = TypeRun.fromValue(typeString, fallback: TypeRun.none);
+    logger.info('Type of generator used: : ${typeRun.value}');
+    switch (typeRun) {
+      case TypeRun.enumDefault:
         runEnumDefault(path: path, logger: logger);
         break;
-      case EnumTypeRun.enumInt:
+      case TypeRun.enumInt:
         runEnumInt(path: path, logger: logger);
         break;
-      case EnumTypeRun.enumString:
+      case TypeRun.enumString:
         runEnumString(path: path, logger: logger);
         break;
 
-      case EnumTypeRun.data:
+      case TypeRun.data:
         runData(path: path, logger: logger);
         break;
-      case EnumTypeRun.none:
-        logger.info('Generator type not defined');
+      case TypeRun.assets:
+        runAssets(path: path, logger: logger);
         break;
-      case EnumTypeRun.assetsSvg:
-        runAssetsSvg(path: path, logger: logger);
-        break;
+      case TypeRun.none:
+        logger.error('Generator type not defined');
+        exit(0);
     }
   } catch (e) {
     stderr.writeln('\n✕ Could not generated extra features');

@@ -1,10 +1,10 @@
 # Files and directories created by pub
+test/
 .packages
 .dart_tool/
 .pub/
 .idea/
 .vscode/
-test/
 assets/
 build/
 
@@ -15,5 +15,6 @@ pubspec.lock
 doc/api/
 
 .DS_Store
+
 
 
