@@ -16,7 +16,6 @@ dev_dependencies:
 
 Then run `flutter pub get` or `dart pub get` to install the package.
 
-
 You can then add a launch config to your `launch.json` to generate:
 
 ```json
@@ -50,15 +49,29 @@ You can then add a launch config to your `launch.json` to generate:
     },
 ```
 
-### How to use
+## How to use
+###  Enum
 
 ![enum_type](https://github.com/a-dev-mobile/dart_gen_extra/blob/master/resources/enum_type.png)
 
+```shell
+dart run dart_gen_extra -t <type_enum> -f <your file>
+```
+
+![enum_example](https://github.com/a-dev-mobile/dart_gen_extra/blob/master/resources/enum_example.png)
+
+
+
+### Data class
+
 in the works...
 
+### Assets
 
+in the works...
 
-
+## Help
+If you encounter any issues [please report them here](https://github.com/a-dev-mobile/dart_gen_extra/issues).
 ### License
 
 ```
