@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:dart_gen_extra/constants.dart';
-import 'package:dart_gen_extra/gen/assets.gen.dart';
+
 import 'package:intl/intl.dart';
 
 import 'package:yaml/yaml.dart';
@@ -185,7 +185,7 @@ $GEN_MSG
 ${sbSub.toString()}
 
 ''');
-  AppAssetsPNG.onb28;
+
   print('***');
   print('✓ Successfully generated extra features for assets');
   print('***');
