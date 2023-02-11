@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:dart_gen_extra/constants.dart';
-import 'package:dart_gen_extra/gen/assets.gen.dart';
+
 import 'package:yaml/yaml.dart';
 import 'package:dart_gen_extra/constants.dart' as constants;
 import 'package:dart_gen_extra/custom_exceptions.dart';
@@ -14,19 +14,7 @@ Future<void> runAssets(
     {required String pathBase, required FLILogger logger}) async {
   logger.progress('\nLooking for the assets folder');
 
-  final pathAssetsFolderExamp1 = p.join(pathBase, 'assets');
-  final pathAssetsFolderExamp2 = p.join(pathBase, 'asset');
-
-  String pathAssets = '';
-
-  if (await _isExistFolder(pathAssetsFolderExamp1)) {
-    pathAssets = pathAssetsFolderExamp1;
-  } else if (await _isExistFolder(pathAssetsFolderExamp2)) {
-    pathAssets = pathAssetsFolderExamp2;
-  } else {
-    logger.error('Assets folder not found');
-    exit(0);
-  }
+  final pathAssets = await _searchFolderAssets(pathBase, logger);
 
   logger.info('\nAssets folder found: $pathAssets');
   logger.progress('\nReading the assets folder');
@@ -38,121 +26,217 @@ Future<void> runAssets(
       .toList();
 
   String fileFullPatch = '';
+  String fileNameWithExtension = '';
   String fileExtension = '';
   String fileName = '';
-  EnumTypeAssets type = EnumTypeAssets.none;
+  String fileOnlyNameFormat = '';
+  String fileFromAssetsPath = '';
+  TypeNameFile type = TypeNameFile.init;
   final assetsList = <AssetItem>[];
-
+  Set<String> extensionUniq = {};
+  Set<String> nameUniq = {};
   for (var v in allFiles) {
     fileFullPatch = v.path;
-    fileExtension = p.extension(fileFullPatch);
-    fileName = p.basename(fileFullPatch).split('.').first;
-    type =
-        EnumTypeAssets.fromValue(fileExtension, fallback: EnumTypeAssets.none);
 
+    fileNameWithExtension = fileFullPatch.split('\\').last;
+    final fileNameWithExtensionSplit = fileNameWithExtension.split('.');
+    // если есть больше одной точки в имени файла
+    if (fileNameWithExtensionSplit.length >= 3) {
+      fileExtension = fileNameWithExtensionSplit.last;
+      fileName = fileNameWithExtension.replaceAll(fileExtension, '');
+
+      type = TypeNameFile.notNormal;
+      // если нет имени но есть расширение
+    } else if (fileNameWithExtensionSplit.length == 2 &&
+        fileNameWithExtensionSplit.first.isEmpty) {
+      type = TypeNameFile.onlyExtension;
+      fileName = fileNameWithExtensionSplit.last;
+      fileExtension = fileNameWithExtensionSplit.last;
+      // если нет расширения
+    } else if (fileNameWithExtensionSplit.length == 2 &&
+        fileNameWithExtensionSplit.last.isEmpty) {
+      fileName = fileNameWithExtensionSplit.first;
+      fileExtension = '';
+      type = TypeNameFile.onlyName;
+      // если  имя с расширением
+    } else if (fileNameWithExtensionSplit.length == 2 &&
+        fileNameWithExtensionSplit.last.isNotEmpty &&
+        fileNameWithExtensionSplit.first.isNotEmpty) {
+      fileName = fileNameWithExtensionSplit.first;
+      fileExtension = fileNameWithExtensionSplit.last;
+
+      type = TypeNameFile.normal;
+    } else if (fileNameWithExtensionSplit.length == 1) {
+      type = TypeNameFile.onlyName;
+      fileName = fileNameWithExtensionSplit.first;
+      fileExtension = '';
+    }
+
+//  если нет имени используем расширение вместо имени
+    // fileName = nameWithExten.first.isEmpty
+    //     ? fileExtension.replaceAll('.', '')
+    //     : nameWithExten.first;
+
+    // // если нет расширения
+    // if (fileName.isNotEmpty && fileExtension.isEmpty) {
+    //   type = TypeNameFile.onlyName;
+    // }
+    fileOnlyNameFormat = _formatFileName(fileName);
+    fileFromAssetsPath = fileFullPatch
+        .replaceAll(pathBase, '')
+        .replaceAll('\\', '/')
+        .replaceAll('/asset', 'asset');
     assetsList.add(AssetItem(
-        fileName: fileName,
-        fileExtension: fileExtension,
+        fileOnlyName: fileName,
+        fileOnlyExtension: fileExtension,
         fileFullPath: fileFullPatch,
         type: type,
-        fileFromAssetsPath: fileFullPatch
-            .replaceAll(pathBase, '')
-            .replaceAll('\\', '/')
-            .replaceAll('/asset', 'asset'),
-        fileFormatName: _formatFileName(fileName)));
+        fileFromAssetsPath: fileFromAssetsPath,
+        fileOnlyNameFormat: fileOnlyNameFormat));
+    type = TypeNameFile.init;
+    extensionUniq.add(fileExtension);
+    nameUniq.add(fileName);
   }
+  for (var n in nameUniq) {
+    final list = assetsList.where((i) => i.fileOnlyName == n).toList();
+    if (list.length == 1) continue;
 
-  logger.info('files found:');
-  var lenght = 0;
-  for (var type in EnumTypeAssets.values) {
-    lenght = assetsList.where((v) => v.type == type).length;
-
-    logger.info('${type.value}\t\t$lenght');
-  }
-
-  final fileNoneList = assetsList.where((v) => v.type == EnumTypeAssets.none);
-  if (fileNoneList.isNotEmpty) {
-    logger.info('\nFile format is not supported:');
-    for (var v in fileNoneList) {
-      print(v.fileFullPath);
+    for (var l in list) {
+      assetsList.remove(l);
+      assetsList.add(l.copyWith(type: TypeNameFile.identical));
     }
   }
 
-  final pathGenFolder = getPathAssetsOutput(pathBase);
-  if (pathGenFolder.isEmpty) {
-    throw NoConfigFoundException(
-      'No configuration found in ${constants.pubspecFilePath}. ',
-    );
-  }
+  _foundFiles(logger, extensionUniq, assetsList);
+
+  _foundFilesWithoutExtension(assetsList, logger);
+
+  final pathGenFolder = _getPathAssetsOutput(pathBase);
+
+  _sendErrorIfNotConfigInPubspec(pathGenFolder);
 
   final pathGenFile = '${pathGenFolder}assets.gen.dart';
   await _createFolderAndFile(pathGenFolder, pathGenFile);
 
-  StringBuffer sbFont = StringBuffer();
+  StringBuffer sbMain = StringBuffer();
+  String vFormat = '';
+  for (var v in extensionUniq) {
+    if (v.isEmpty) continue;
+    vFormat = _extensionFormat(v);
 
- 
- 
-  
- 
- 
-  final fontList = assetsList.where((v) => v.type == EnumTypeAssets.ttf);
-
-  for (var v in fontList) {
-    sbFont.write('''
-/// File path: _${v.fileFromAssetsPath}
-static const String ${v.fileFormatName} = '${v.fileFromAssetsPath}';
-
+    sbMain.write('''
+  static const \$Assets_$vFormat $vFormat = \$Assets_$vFormat();
 ''');
   }
 
-  StringBuffer sbImage = StringBuffer();
-  final imageList = assetsList.where((v) => v.type == EnumTypeAssets.png);
-  for (var v in imageList) {
-    sbImage.write('''
-/// File path: _${v.fileFromAssetsPath}
-static const String ${v.fileFormatName} = '${v.fileFromAssetsPath}';
+  StringBuffer sbSub = StringBuffer();
+  var listAssets = <AssetItem>[];
+  final listStrNameFile = <String>[];
+  for (var v in extensionUniq) {
+    vFormat = _extensionFormat(v);
+    sbSub.write('''
+
+class \$Assets_$vFormat {
+  const \$Assets_$vFormat();
 
 ''');
 
-    Assets.ttf;
+    listAssets = assetsList.where((e) => e.fileOnlyExtension == v).toList();
+    for (var l in listAssets) {
+      //  заполняю чтобы дальше вывести полный список
+      listStrNameFile.add(l.fileOnlyNameFormat);
+
+      sbSub.write('''
+  /// File path: _${l.fileFromAssetsPath}
+  String get ${l.fileOnlyNameFormat} => '${l.fileFromAssetsPath}';
+
+''');
+    }
+
+    sbSub.write('''
+  /// List of all assets
+  List<String> get values => ${listStrNameFile.toString()};
+}
+''');
+    listStrNameFile.clear();
   }
 
   File(pathGenFile).writeAsString('''
 $GEN_MSG
-class AssetsFont {
-  static final AssetsFont _internalSingleton = AssetsFont._internal();
-  factory AssetsFont() => _internalSingleton;
-  AssetsFont._internal();
 
-${sbFont.toString()}
-}
+// coverage:ignore-file
+// ignore_for_file: type=lint
+// ignore_for_file: directives_ordering,unnecessary_import,implicit_dynamic_list_literal,deprecated_member_use
 
-
-class AssetsImage {
-  static final AssetsImage _internalSingleton = AssetsImage._internal();
-  factory AssetsImage() => _internalSingleton;
-  AssetsImage._internal();
-
-${sbImage.toString()}
-}
-
-
-
-
+class Assets {
+  Assets._();
+${sbMain.toString()}}
+${sbSub.toString()}
 ''');
+}
 
-  // for (var v in assetsList) {}
+String _extensionFormat(String v) => v.replaceAll('.', '').replaceAll('-', '_');
 
-  // logger.info('pdf:\t${pdfFiles.length}');
-  // logger.info('svg:\t${svgFiles.length}');
-  // logger.info('ttf:\t${ttfFiles.length}');
-  // logger.info('json:\t${jsonFiles.length}');
-  // logger.info('png:\t${pngFiles.length}');
-  // print(allFiles);
-  // print('');
-  // print('');
-  // print('');
-  // print(svgFiles);
+void _foundFilesWithoutExtension(List<AssetItem> assetsList, FLILogger logger) {
+  final fileNoneList =
+      assetsList.where((v) => v.fileOnlyExtension == noExtension);
+  if (fileNoneList.isNotEmpty) {
+    logger.info('\nFile without an extension:');
+    for (var v in fileNoneList) {
+      print(v.fileFullPath);
+    }
+  }
+}
+
+void _foundFilesWithoutName(List<AssetItem> assetsList, FLILogger logger) {
+  final fileNoneList =
+      assetsList.where((v) => v.fileOnlyExtension == noExtension);
+  if (fileNoneList.isNotEmpty) {
+    logger.info('\nFiles without a name:');
+    for (var v in fileNoneList) {
+      print(v.fileFullPath);
+    }
+  }
+}
+
+void _sendErrorIfNotConfigInPubspec(String pathGenFolder) {
+  if (pathGenFolder.isEmpty) {
+    throw NoConfigFoundException(
+      '''No configuration found in ${constants.pubspecFilePath}. 
+  # example:
+  
+  dart_gen_extra:
+  assets_output: "lib/gen/"
+  ''',
+    );
+  }
+}
+
+void _foundFiles(
+    FLILogger logger, Set<String> extensionUniq, List<AssetItem> assetsList) {
+  logger.info('files found:');
+  var lenght = 0;
+  for (var e in extensionUniq) {
+    if (e.isEmpty) continue;
+    lenght = assetsList.where((v) => v.fileOnlyExtension == e).length;
+    logger.info('$lenght\t$e');
+  }
+  lenght = assetsList.where((v) => v.fileOnlyExtension == noExtension).length;
+  logger.info('--');
+  logger.info('No extension\t$lenght');
+}
+
+Future<String> _searchFolderAssets(String pathBase, FLILogger logger) async {
+  final pathAssetsFolderExamp1 = p.join(pathBase, 'assets');
+  final pathAssetsFolderExamp2 = p.join(pathBase, 'asset');
+  if (await _isExistFolder(pathAssetsFolderExamp1)) {
+    return pathAssetsFolderExamp1;
+  } else if (await _isExistFolder(pathAssetsFolderExamp2)) {
+    return pathAssetsFolderExamp2;
+  } else {
+    logger.error('Assets folder not found');
+    exit(0);
+  }
 }
 
 Future<void> _createFolderAndFile(
@@ -167,10 +251,12 @@ Future<bool> _isExistFolder(String path) async {
 }
 
 String _formatFileName(String s) {
+  s = s.replaceAll('.', '_');
   final separatedWords = s.split(RegExp(r'[!@#<>?":`~;[\]\\|=+)(*&^%-\s_]+'));
   var newString = '';
 
   for (final word in separatedWords) {
+    if (word.isEmpty) continue;
     newString += word[0].toUpperCase() + word.substring(1).toLowerCase();
   }
 
@@ -178,7 +264,7 @@ String _formatFileName(String s) {
 }
 
 /// Loads dart gen_extra_config from `pubspec.yaml` file
-String getPathAssetsOutput(String basePath) {
+String _getPathAssetsOutput(String basePath) {
   final pubspecFile = File(p.join(basePath, constants.pubspecFilePath));
   if (!pubspecFile.existsSync()) {
     return '';
@@ -189,34 +275,15 @@ String getPathAssetsOutput(String basePath) {
   if (userMap == null) return '';
 
   try {
+    final configName = userMap['dart_gen_extra'];
+    if (configName == null) return '';
+    final configValue = configName['assets_output'];
+    if (configValue == null) return '';
+
     var relPath = (userMap['dart_gen_extra']['assets_output']).toString();
 
     return p.join(basePath, relPath);
   } on Exception {
     return '';
-  }
-}
-
-extension YamlMapConverter on YamlMap {
-  dynamic _convertNode(dynamic v) {
-    if (v is YamlMap) {
-      return (v).toMap();
-    } else if (v is YamlList) {
-      var list = <dynamic>[];
-      for (var e in v) {
-        list.add(_convertNode(e));
-      }
-      return list;
-    } else {
-      return v;
-    }
-  }
-
-  Map<String, dynamic> toMap() {
-    var map = <String, dynamic>{};
-    nodes.forEach((k, v) {
-      map[(k as YamlScalar).value.toString()] = _convertNode(v.value);
-    });
-    return map;
   }
 }

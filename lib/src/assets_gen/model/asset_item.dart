@@ -4,21 +4,23 @@ import 'dart:convert';
 import '../enum_type_assets.dart';
 
 class AssetItem { 
-  /* type: enum
-  init: EnumTypeAssets.none
+  /* 
+  type: enum
+  init: TypeNameFile.init
    */
-  final EnumTypeAssets type;
+  final TypeNameFile type;
 /*  init: '' */
   final String fileFullPath;
   /*  init: '' */
   final String fileFromAssetsPath;
   /*  init: '' */
-  final String fileName;
+  final String fileOnlyName;
   /*  init: '' */
-  final String fileFormatName;
+  final String fileOnlyNameFormat;
   /*  init: '' */
-  final String fileExtension;
-
+  final String fileOnlyExtension;
+  /*  init: '' */
+  final String fileNameWithExtension;
   // end
    
   //  ******************************
@@ -27,12 +29,13 @@ class AssetItem {
 
   
   const AssetItem({
-    this.type = EnumTypeAssets.none,
+    this.type = TypeNameFile.init,
     this.fileFullPath = '',
     this.fileFromAssetsPath = '',
-    this.fileName = '',
-    this.fileFormatName = '',
-    this.fileExtension = '',
+    this.fileOnlyName = '',
+    this.fileOnlyNameFormat = '',
+    this.fileOnlyExtension = '',
+    this.fileNameWithExtension = '',
   });
   /*
   
@@ -45,39 +48,43 @@ class AssetItem {
       'type': type.index, 
       'fileFullPath': fileFullPath, 
       'fileFromAssetsPath': fileFromAssetsPath, 
-      'fileName': fileName, 
-      'fileFormatName': fileFormatName, 
-      'fileExtension': fileExtension, 
+      'fileOnlyName': fileOnlyName, 
+      'fileOnlyNameFormat': fileOnlyNameFormat, 
+      'fileOnlyExtension': fileOnlyExtension, 
+      'fileNameWithExtension': fileNameWithExtension, 
     };
   }
 
     
   factory AssetItem.fromMap(Map<String, dynamic> map) {
     return AssetItem(
-      type: EnumTypeAssets.values[map['type'] as int], 
+      type: TypeNameFile.values[map['type'] as int], 
       fileFullPath: map['fileFullPath'] as String? ?? '' , 
       fileFromAssetsPath: map['fileFromAssetsPath'] as String? ?? '' , 
-      fileName: map['fileName'] as String? ?? '' , 
-      fileFormatName: map['fileFormatName'] as String? ?? '' , 
-      fileExtension: map['fileExtension'] as String? ?? '' , 
+      fileOnlyName: map['fileOnlyName'] as String? ?? '' , 
+      fileOnlyNameFormat: map['fileOnlyNameFormat'] as String? ?? '' , 
+      fileOnlyExtension: map['fileOnlyExtension'] as String? ?? '' , 
+      fileNameWithExtension: map['fileNameWithExtension'] as String? ?? '' , 
     );
   }
 
   AssetItem copyWith({
-    EnumTypeAssets? type,
+    TypeNameFile? type,
     String? fileFullPath,
     String? fileFromAssetsPath,
-    String? fileName,
-    String? fileFormatName,
-    String? fileExtension,
+    String? fileOnlyName,
+    String? fileOnlyNameFormat,
+    String? fileOnlyExtension,
+    String? fileNameWithExtension,
   }) {
     return AssetItem(
       type: type ?? this.type, 
       fileFullPath: fileFullPath ?? this.fileFullPath, 
       fileFromAssetsPath: fileFromAssetsPath ?? this.fileFromAssetsPath, 
-      fileName: fileName ?? this.fileName, 
-      fileFormatName: fileFormatName ?? this.fileFormatName, 
-      fileExtension: fileExtension ?? this.fileExtension, 
+      fileOnlyName: fileOnlyName ?? this.fileOnlyName, 
+      fileOnlyNameFormat: fileOnlyNameFormat ?? this.fileOnlyNameFormat, 
+      fileOnlyExtension: fileOnlyExtension ?? this.fileOnlyExtension, 
+      fileNameWithExtension: fileNameWithExtension ?? this.fileNameWithExtension, 
     );
   }
   
@@ -94,9 +101,10 @@ class AssetItem {
             (identical(other.type, type) || other.type == type)&& 
             (identical(other.fileFullPath, fileFullPath) || other.fileFullPath == fileFullPath)&& 
             (identical(other.fileFromAssetsPath, fileFromAssetsPath) || other.fileFromAssetsPath == fileFromAssetsPath)&& 
-            (identical(other.fileName, fileName) || other.fileName == fileName)&& 
-            (identical(other.fileFormatName, fileFormatName) || other.fileFormatName == fileFormatName)&& 
-            (identical(other.fileExtension, fileExtension) || other.fileExtension == fileExtension));
+            (identical(other.fileOnlyName, fileOnlyName) || other.fileOnlyName == fileOnlyName)&& 
+            (identical(other.fileOnlyNameFormat, fileOnlyNameFormat) || other.fileOnlyNameFormat == fileOnlyNameFormat)&& 
+            (identical(other.fileOnlyExtension, fileOnlyExtension) || other.fileOnlyExtension == fileOnlyExtension)&& 
+            (identical(other.fileNameWithExtension, fileNameWithExtension) || other.fileNameWithExtension == fileNameWithExtension));
   }
   
   @override
@@ -105,13 +113,14 @@ class AssetItem {
         type,
         fileFullPath,
         fileFromAssetsPath,
-        fileName,
-        fileFormatName,
-        fileExtension,
+        fileOnlyName,
+        fileOnlyNameFormat,
+        fileOnlyExtension,
+        fileNameWithExtension,
 ]);
   
   @override
   String toString() {
-    return 'AssetItem(type: $type, fileFullPath: $fileFullPath, fileFromAssetsPath: $fileFromAssetsPath, fileName: $fileName, fileFormatName: $fileFormatName, fileExtension: $fileExtension, )';
+    return 'AssetItem(type: $type, fileFullPath: $fileFullPath, fileFromAssetsPath: $fileFromAssetsPath, fileOnlyName: $fileOnlyName, fileOnlyNameFormat: $fileOnlyNameFormat, fileOnlyExtension: $fileOnlyExtension, fileNameWithExtension: $fileNameWithExtension, )';
     }
   }

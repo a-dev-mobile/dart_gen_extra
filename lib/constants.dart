@@ -9,7 +9,7 @@ String introMessage(String currentVersion) => '''
 const String GEN_MSG = '''
 //          --DartGenExtra--
 //  *************************************
-// GENERATED CODE BELOW - DO NOT MODIFY
+//           GENERATED CODE 
 //  *************************************
   ''';
   
@@ -18,3 +18,6 @@ String pubspecFilePath = path.join('pubspec.yaml');
 
 /// Relative pubspec.yaml path
 String namePackage = 'dart_gen_extra';
+
+/// 
+String noExtension = 'none';
