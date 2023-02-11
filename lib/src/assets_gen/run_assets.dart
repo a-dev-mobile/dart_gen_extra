@@ -91,7 +91,7 @@ Future<void> runAssets(
     nameFormatList.add(fileOnlyNameFormat);
     final stat = FileStat.statSync(fileFullPatch);
     fileFromAssetsPath =
-        fileFullPatch.replaceAll(pathBase, '').replaceAll('\\', '/');
+        fileFullPatch.replaceAll(pathBase, '').replaceAll('\\', '/').substring(1);
     // .replaceAll('/asset', 'asset');
     assetsList.add(AssetItem(
         fileOnlyName: fileName,
@@ -164,7 +164,7 @@ class AppAssets$vFormat {''');
   ///     * Accessed: ${l.dateAccessed}.
   ///     * Changed:  ${l.dateChanged}.
   ///     * Modified: ${l.dateModified}.
-   static const String ${l.fileOnlyNameFormat} = '${l.fileFromAssetsPath}';
+  static const String ${l.fileOnlyNameFormat} = '${l.fileFromAssetsPath}';
 ''');
     }
     // AppAssetsJSON.cardPhoto;
