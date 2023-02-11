@@ -20,4 +20,4 @@ String pubspecFilePath = path.join('pubspec.yaml');
 String namePackage = 'dart_gen_extra';
 
 /// 
-String noExtension = 'none';
+String noExtension = 'noExtension';

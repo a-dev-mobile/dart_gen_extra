@@ -34,7 +34,8 @@ Future<void> runAssets(
   TypeNameFile type = TypeNameFile.init;
   final assetsList = <AssetItem>[];
   Set<String> extensionUniq = {};
-  Set<String> nameUniq = {};
+
+  List<String> nameFormatList = [];
   for (var v in allFiles) {
     fileFullPatch = v.path;
 
@@ -56,7 +57,7 @@ Future<void> runAssets(
     } else if (fileNameWithExtensionSplit.length == 2 &&
         fileNameWithExtensionSplit.last.isEmpty) {
       fileName = fileNameWithExtensionSplit.first;
-      fileExtension = '';
+      fileExtension = noExtension;
       type = TypeNameFile.onlyName;
       // если  имя с расширением
     } else if (fileNameWithExtensionSplit.length == 2 &&
@@ -69,23 +70,25 @@ Future<void> runAssets(
     } else if (fileNameWithExtensionSplit.length == 1) {
       type = TypeNameFile.onlyName;
       fileName = fileNameWithExtensionSplit.first;
-      fileExtension = '';
+      fileExtension = noExtension;
     }
 
-//  если нет имени используем расширение вместо имени
-    // fileName = nameWithExten.first.isEmpty
-    //     ? fileExtension.replaceAll('.', '')
-    //     : nameWithExten.first;
-
-    // // если нет расширения
-    // if (fileName.isNotEmpty && fileExtension.isEmpty) {
-    //   type = TypeNameFile.onlyName;
-    // }
+//  переименовываем если название файлов одинаково
     fileOnlyNameFormat = _formatFileName(fileName);
-    fileFromAssetsPath = fileFullPatch
-        .replaceAll(pathBase, '')
-        .replaceAll('\\', '/')
-        .replaceAll('/asset', 'asset');
+
+    for (var i = 0; i < 2000; i++) {
+      if (nameFormatList.contains(fileOnlyNameFormat)) {
+        type = TypeNameFile.identical;
+        fileOnlyNameFormat = _incrNameFile(fileOnlyNameFormat);
+      } else {
+        break;
+      }
+    }
+    nameFormatList.add(fileOnlyNameFormat);
+
+    fileFromAssetsPath =
+        fileFullPatch.replaceAll(pathBase, '').replaceAll('\\', '/');
+    // .replaceAll('/asset', 'asset');
     assetsList.add(AssetItem(
         fileOnlyName: fileName,
         fileOnlyExtension: fileExtension,
@@ -95,9 +98,9 @@ Future<void> runAssets(
         fileOnlyNameFormat: fileOnlyNameFormat));
     type = TypeNameFile.init;
     extensionUniq.add(fileExtension);
-    nameUniq.add(fileName);
+    // nameList.add(fileName);
   }
-  for (var n in nameUniq) {
+  for (var n in nameFormatList.toSet().toList()) {
     final list = assetsList.where((i) => i.fileOnlyName == n).toList();
     if (list.length == 1) continue;
 
@@ -106,6 +109,8 @@ Future<void> runAssets(
       assetsList.add(l.copyWith(type: TypeNameFile.identical));
     }
   }
+
+  _errorIfNotFiles(assetsList, logger);
 
   _foundFiles(logger, extensionUniq, assetsList);
 
@@ -173,6 +178,13 @@ class Assets {
 ${sbMain.toString()}}
 ${sbSub.toString()}
 ''');
+}
+
+void _errorIfNotFiles(List<AssetItem> assetsList, FLILogger logger) {
+  if (assetsList.isEmpty) {
+    logger.error('Files in assets not found');
+    exit(0);
+  }
 }
 
 String _extensionFormat(String v) => v.replaceAll('.', '').replaceAll('-', '_');
@@ -252,15 +264,20 @@ Future<bool> _isExistFolder(String path) async {
 
 String _formatFileName(String s) {
   s = s.replaceAll('.', '_');
+
   final separatedWords = s.split(RegExp(r'[!@#<>?":`~;[\]\\|=+)(*&^%-\s_]+'));
   var newString = '';
+
+  if (separatedWords[0].isEmpty ||
+      int.tryParse(separatedWords[0]) != null ||
+      int.tryParse(separatedWords[0][0]) != null) separatedWords[0] = 'n';
 
   for (final word in separatedWords) {
     if (word.isEmpty) continue;
     newString += word[0].toUpperCase() + word.substring(1).toLowerCase();
   }
-
-  return '${newString[0].toLowerCase()}${newString.substring(1)}';
+  final text = '${newString[0].toLowerCase()}${newString.substring(1)}';
+  return text=='values'?'vValues':text;
 }
 
 /// Loads dart gen_extra_config from `pubspec.yaml` file
@@ -286,4 +303,20 @@ String _getPathAssetsOutput(String basePath) {
   } on Exception {
     return '';
   }
+}
+
+String _incrNameFile(String text) {
+  final intInStr = RegExp(r'\d+$');
+  final listMath = intInStr.allMatches(text).map((m) => m.group(0));
+  final defValue = '${text}1';
+  if (listMath.isEmpty) return defValue;
+
+  int? i = int.tryParse(listMath.first ?? '');
+
+  if (i == null) return defValue;
+
+  i = i + 1;
+  String updateText = text.replaceAll(intInStr, '');
+
+  return '$updateText$i';
 }
