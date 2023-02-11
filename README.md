@@ -7,11 +7,13 @@ A command line tool that simplifies the task of generating advanced dart languag
 The setup of Dart Gen extra is really easy. Just add the following to your `pubspec.yaml`:
 
 ```yaml
+#  In the future, I will move it to pub dev
+
 dev_dependencies:
   dart_gen_extra:
     git:
       url: https://github.com/a-dev-mobile/dart_gen_extra.git
-      ref: master #  In the future, I will move it to pub dev
+      ref: master 
 ```
 
 Then run `flutter pub get` or `dart pub get` to install the package.
@@ -43,10 +45,26 @@ You can then add a launch config to your `launch.json` to generate:
         // GEN data class   
     {
       "label": "GEN data class",
-      "type": "dart run dart_gen_extra <param>",
+      "type": "dart",
       "command": "dart",
       "args": ["run", "dart_gen_extra", "-t", "data", "-f", "${file}"],
     },
+       // GEN assets   
+    {
+      "label": "GEN assets",
+      "type": "dart",
+      "command": "dart",
+      "args": ["run", "dart_gen_extra", "-t", "assets", "-f", "${workspaceFolder}"]
+    },
+```
+If you will use GEN assets, don't forget to add the path where to generate the file to pubspec:
+
+```yaml
+dev_dependencies:
+  dart_gen_extra:
+...
+dart_gen_extra:
+  assets_output: "lib/gen/" 
 ```
 
 ## How to use

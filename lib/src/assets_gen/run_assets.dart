@@ -227,15 +227,18 @@ void _sendErrorIfNotConfigInPubspec(String pathGenFolder) {
 void _foundFiles(
     FLILogger logger, Set<String> extensionUniq, List<AssetItem> assetsList) {
   logger.info('files found:');
+    logger.info('---');
+    logger.info('total\textension');
+    logger.info('---');
   var lenght = 0;
   for (var e in extensionUniq) {
-    if (e.isEmpty) continue;
+    if (e.isEmpty||e==noExtension) continue;
     lenght = assetsList.where((v) => v.fileOnlyExtension == e).length;
     logger.info('$lenght\t$e');
   }
   lenght = assetsList.where((v) => v.fileOnlyExtension == noExtension).length;
-  logger.info('--');
-  logger.info('No extension\t$lenght');
+  logger.info('---');
+  logger.info('$lenght\tNo extension');
 }
 
 Future<String> _searchFolderAssets(String pathBase, FLILogger logger) async {
