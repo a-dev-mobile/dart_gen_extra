@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import '../enum_type_assets.dart';
 
-class AssetItem { 
+class AssetItem {   
   /* 
   type: enum
   init: TypeNameFile.init
@@ -21,6 +21,14 @@ class AssetItem {
   final String fileOnlyExtension;
   /*  init: '' */
   final String fileNameWithExtension;
+    /*  init: '' */
+  final String size;
+      /*  init: '' */
+  final String dateAccessed;
+      /*  init: '' */
+  final String dateModified;
+      /*  init: '' */
+  final String dateChanged;
   // end
    
   //  ******************************
@@ -36,6 +44,10 @@ class AssetItem {
     this.fileOnlyNameFormat = '',
     this.fileOnlyExtension = '',
     this.fileNameWithExtension = '',
+    this.size = '',
+    this.dateAccessed = '',
+    this.dateModified = '',
+    this.dateChanged = '',
   });
   /*
   
@@ -52,6 +64,10 @@ class AssetItem {
       'fileOnlyNameFormat': fileOnlyNameFormat, 
       'fileOnlyExtension': fileOnlyExtension, 
       'fileNameWithExtension': fileNameWithExtension, 
+      'size': size, 
+      'dateAccessed': dateAccessed, 
+      'dateModified': dateModified, 
+      'dateChanged': dateChanged, 
     };
   }
 
@@ -65,6 +81,10 @@ class AssetItem {
       fileOnlyNameFormat: map['fileOnlyNameFormat'] as String? ?? '' , 
       fileOnlyExtension: map['fileOnlyExtension'] as String? ?? '' , 
       fileNameWithExtension: map['fileNameWithExtension'] as String? ?? '' , 
+      size: map['size'] as String? ?? '' , 
+      dateAccessed: map['dateAccessed'] as String? ?? '' , 
+      dateModified: map['dateModified'] as String? ?? '' , 
+      dateChanged: map['dateChanged'] as String? ?? '' , 
     );
   }
 
@@ -76,6 +96,10 @@ class AssetItem {
     String? fileOnlyNameFormat,
     String? fileOnlyExtension,
     String? fileNameWithExtension,
+    String? size,
+    String? dateAccessed,
+    String? dateModified,
+    String? dateChanged,
   }) {
     return AssetItem(
       type: type ?? this.type, 
@@ -85,6 +109,10 @@ class AssetItem {
       fileOnlyNameFormat: fileOnlyNameFormat ?? this.fileOnlyNameFormat, 
       fileOnlyExtension: fileOnlyExtension ?? this.fileOnlyExtension, 
       fileNameWithExtension: fileNameWithExtension ?? this.fileNameWithExtension, 
+      size: size ?? this.size, 
+      dateAccessed: dateAccessed ?? this.dateAccessed, 
+      dateModified: dateModified ?? this.dateModified, 
+      dateChanged: dateChanged ?? this.dateChanged, 
     );
   }
   
@@ -104,7 +132,11 @@ class AssetItem {
             (identical(other.fileOnlyName, fileOnlyName) || other.fileOnlyName == fileOnlyName)&& 
             (identical(other.fileOnlyNameFormat, fileOnlyNameFormat) || other.fileOnlyNameFormat == fileOnlyNameFormat)&& 
             (identical(other.fileOnlyExtension, fileOnlyExtension) || other.fileOnlyExtension == fileOnlyExtension)&& 
-            (identical(other.fileNameWithExtension, fileNameWithExtension) || other.fileNameWithExtension == fileNameWithExtension));
+            (identical(other.fileNameWithExtension, fileNameWithExtension) || other.fileNameWithExtension == fileNameWithExtension)&& 
+            (identical(other.size, size) || other.size == size)&& 
+            (identical(other.dateAccessed, dateAccessed) || other.dateAccessed == dateAccessed)&& 
+            (identical(other.dateModified, dateModified) || other.dateModified == dateModified)&& 
+            (identical(other.dateChanged, dateChanged) || other.dateChanged == dateChanged));
   }
   
   @override
@@ -117,10 +149,14 @@ class AssetItem {
         fileOnlyNameFormat,
         fileOnlyExtension,
         fileNameWithExtension,
+        size,
+        dateAccessed,
+        dateModified,
+        dateChanged,
 ]);
   
   @override
   String toString() {
-    return 'AssetItem(type: $type, fileFullPath: $fileFullPath, fileFromAssetsPath: $fileFromAssetsPath, fileOnlyName: $fileOnlyName, fileOnlyNameFormat: $fileOnlyNameFormat, fileOnlyExtension: $fileOnlyExtension, fileNameWithExtension: $fileNameWithExtension, )';
+    return 'AssetItem(type: $type, fileFullPath: $fileFullPath, fileFromAssetsPath: $fileFromAssetsPath, fileOnlyName: $fileOnlyName, fileOnlyNameFormat: $fileOnlyNameFormat, fileOnlyExtension: $fileOnlyExtension, fileNameWithExtension: $fileNameWithExtension, size: $size, dateAccessed: $dateAccessed, dateModified: $dateModified, dateChanged: $dateChanged, )';
     }
   }

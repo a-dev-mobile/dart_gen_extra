@@ -1,5 +1,8 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:dart_gen_extra/constants.dart';
+import 'package:dart_gen_extra/gen/assets.gen.dart';
+import 'package:intl/intl.dart';
 
 import 'package:yaml/yaml.dart';
 import 'package:dart_gen_extra/constants.dart' as constants;
@@ -31,6 +34,7 @@ Future<void> runAssets(
   String fileName = '';
   String fileOnlyNameFormat = '';
   String fileFromAssetsPath = '';
+
   TypeNameFile type = TypeNameFile.init;
   final assetsList = <AssetItem>[];
   Set<String> extensionUniq = {};
@@ -85,7 +89,7 @@ Future<void> runAssets(
       }
     }
     nameFormatList.add(fileOnlyNameFormat);
-
+    final stat = FileStat.statSync(fileFullPatch);
     fileFromAssetsPath =
         fileFullPatch.replaceAll(pathBase, '').replaceAll('\\', '/');
     // .replaceAll('/asset', 'asset');
@@ -95,6 +99,11 @@ Future<void> runAssets(
         fileFullPath: fileFullPatch,
         type: type,
         fileFromAssetsPath: fileFromAssetsPath,
+        fileNameWithExtension: fileNameWithExtension,
+        size: await _getFileSize(fileFullPatch, 1),
+        dateAccessed: _getDateFormat(stat.accessed),
+        dateModified: _getDateFormat(stat.modified),
+        dateChanged: _getDateFormat(stat.changed),
         fileOnlyNameFormat: fileOnlyNameFormat));
     type = TypeNameFile.init;
     extensionUniq.add(fileExtension);
@@ -123,17 +132,17 @@ Future<void> runAssets(
   final pathGenFile = '${pathGenFolder}assets.gen.dart';
   await _createFolderAndFile(pathGenFolder, pathGenFile);
 
-  StringBuffer sbMain = StringBuffer();
+//   StringBuffer sbMain = StringBuffer();
+//   for (var v in extensionUniq) {
+//     if (v.isEmpty) continue;
+//     vFormat = _extensionFormat(v);
+
+//     sbMain.write('''
+//   static const \$Assets_$vFormat $vFormat = \$Assets_$vFormat();
+// ''');
+//   }
+
   String vFormat = '';
-  for (var v in extensionUniq) {
-    if (v.isEmpty) continue;
-    vFormat = _extensionFormat(v);
-
-    sbMain.write('''
-  static const \$Assets_$vFormat $vFormat = \$Assets_$vFormat();
-''');
-  }
-
   StringBuffer sbSub = StringBuffer();
   var listAssets = <AssetItem>[];
   final listStrNameFile = <String>[];
@@ -141,10 +150,7 @@ Future<void> runAssets(
     vFormat = _extensionFormat(v);
     sbSub.write('''
 
-class \$Assets_$vFormat {
-  const \$Assets_$vFormat();
-
-''');
+class AppAssets$vFormat {''');
 
     listAssets = assetsList.where((e) => e.fileOnlyExtension == v).toList();
     for (var l in listAssets) {
@@ -152,15 +158,20 @@ class \$Assets_$vFormat {
       listStrNameFile.add(l.fileOnlyNameFormat);
 
       sbSub.write('''
-  /// File path: _${l.fileFromAssetsPath}
-  String get ${l.fileOnlyNameFormat} => '${l.fileFromAssetsPath}';
-
+ 
+  /// * Size:\t${l.size}.
+  /// * File path: _${l.fileFromAssetsPath}.
+  ///     * Accessed: ${l.dateAccessed}.
+  ///     * Changed:  ${l.dateChanged}.
+  ///     * Modified: ${l.dateModified}.
+   static const String ${l.fileOnlyNameFormat} = '${l.fileFromAssetsPath}';
 ''');
     }
-
+    // AppAssetsJSON.cardPhoto;
     sbSub.write('''
+
   /// List of all assets
-  List<String> get values => ${listStrNameFile.toString()};
+  static const List<String> values = ${listStrNameFile.toString()};
 }
 ''');
     listStrNameFile.clear();
@@ -168,16 +179,16 @@ class \$Assets_$vFormat {
 
   File(pathGenFile).writeAsString('''
 $GEN_MSG
-
 // coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: directives_ordering,unnecessary_import,implicit_dynamic_list_literal,deprecated_member_use
-
-class Assets {
-  Assets._();
-${sbMain.toString()}}
 ${sbSub.toString()}
+
 ''');
+  AppAssetsPNG.onb28;
+  print('***');
+  print('✓ Successfully generated extra features for assets');
+  print('***');
 }
 
 void _errorIfNotFiles(List<AssetItem> assetsList, FLILogger logger) {
@@ -187,7 +198,13 @@ void _errorIfNotFiles(List<AssetItem> assetsList, FLILogger logger) {
   }
 }
 
-String _extensionFormat(String v) => v.replaceAll('.', '').replaceAll('-', '_');
+String _getDateFormat(DateTime date) {
+  return DateFormat('yyyy-MM-dd').format(date);
+}
+
+String _extensionFormat(String v) {
+  return v.replaceAll('.', '').replaceAll('-', '_').toUpperCase();
+}
 
 void _foundFilesWithoutExtension(List<AssetItem> assetsList, FLILogger logger) {
   final fileNoneList =
@@ -198,6 +215,15 @@ void _foundFilesWithoutExtension(List<AssetItem> assetsList, FLILogger logger) {
       print(v.fileFullPath);
     }
   }
+}
+
+Future<String> _getFileSize(String filepath, int decimals) async {
+  var file = File(filepath);
+  int bytes = await file.length();
+  if (bytes <= 0) return "0 B";
+  const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+  var i = (log(bytes) / log(1024)).floor();
+  return '${(bytes / pow(1024, i)).toStringAsFixed(decimals)} ${suffixes[i]}';
 }
 
 void _foundFilesWithoutName(List<AssetItem> assetsList, FLILogger logger) {
@@ -227,12 +253,12 @@ void _sendErrorIfNotConfigInPubspec(String pathGenFolder) {
 void _foundFiles(
     FLILogger logger, Set<String> extensionUniq, List<AssetItem> assetsList) {
   logger.info('files found:');
-    logger.info('---');
-    logger.info('total\textension');
-    logger.info('---');
+  logger.info('---');
+  logger.info('total\textension');
+  logger.info('---');
   var lenght = 0;
   for (var e in extensionUniq) {
-    if (e.isEmpty||e==noExtension) continue;
+    if (e.isEmpty || e == noExtension) continue;
     lenght = assetsList.where((v) => v.fileOnlyExtension == e).length;
     logger.info('$lenght\t$e');
   }
@@ -280,7 +306,7 @@ String _formatFileName(String s) {
     newString += word[0].toUpperCase() + word.substring(1).toLowerCase();
   }
   final text = '${newString[0].toLowerCase()}${newString.substring(1)}';
-  return text=='values'?'vValues':text;
+  return text == 'values' ? 'vValues' : text;
 }
 
 /// Loads dart gen_extra_config from `pubspec.yaml` file
