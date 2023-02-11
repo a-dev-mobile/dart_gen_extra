@@ -159,11 +159,11 @@ class AppAssets$vFormat {''');
 
       sbSub.write('''
  
-  /// * Size:\t${l.size}.
-  /// * File path: _${l.fileFromAssetsPath}.
-  ///     * Accessed: ${l.dateAccessed}.
-  ///     * Changed:  ${l.dateChanged}.
-  ///     * Modified: ${l.dateModified}.
+  /// * Size:\t${l.size}
+  /// * File path: _${l.fileFromAssetsPath}
+  ///     * Accessed: ${l.dateAccessed}
+  ///     * Changed:  ${l.dateChanged}
+  ///     * Modified: ${l.dateModified}
   static const String ${l.fileOnlyNameFormat} = '${l.fileFromAssetsPath}';
 ''');
     }
